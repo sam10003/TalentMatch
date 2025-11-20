@@ -23,7 +23,6 @@ function InputBar({onSubmit,onUpdate,UploadClick}){
     
     const currentMessage = messages[currentMessageIndex];
     let charIndex = 0;
-    let timeoutId = null;
     
     // Clear previous animation
     if (animationRef.current) {
@@ -41,7 +40,7 @@ function InputBar({onSubmit,onUpdate,UploadClick}){
       } else {
         // Wait a bit before moving to next message
         clearInterval(animationRef.current);
-        timeoutId = setTimeout(() => {
+        setTimeout(() => {
           setCurrentMessageIndex((prev) => (prev + 1) % messages.length);
         }, 2000);
       }
@@ -51,11 +50,8 @@ function InputBar({onSubmit,onUpdate,UploadClick}){
       if (animationRef.current) {
         clearInterval(animationRef.current);
       }
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
     };
-  }, [currentMessageIndex, isAnimating, messages]);
+  }, [currentMessageIndex, isAnimating]);
   
   const handleChange = (e) => {
     setValue(e.target.value);
@@ -79,7 +75,7 @@ function InputBar({onSubmit,onUpdate,UploadClick}){
     UploadClick();
   };
 
-  return (<div className="min-h-screen flex items-center justify-center relative z-10">
+  return (<div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-50 to-white">
     <form onSubmit={handleSubmit} className="
       w-full
       max-w-4xl
@@ -89,12 +85,11 @@ function InputBar({onSubmit,onUpdate,UploadClick}){
       items-center
     ">
       <input
-	type="search"
+	type="text"
 	value={value}
 	onChange={handleChange}
 	onFocus={handleFocus}
 	placeholder={isAnimating ? animatedPlaceholder : "Brand new job opportunities..."}
-	aria-label="Search for job opportunities"
         className="
           flex-1
           px-5
@@ -118,7 +113,6 @@ function InputBar({onSubmit,onUpdate,UploadClick}){
       <Upload clicked={handleUpload}/>
       <button 
         type="submit"
-        aria-label="Submit search"
         className="
           px-7
           py-4
