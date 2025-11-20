@@ -1,18 +1,12 @@
-import { useState, useEffect } from 'react'
-import './App.css'
 
-import InputBar from "./components/InputBar/InputBar";
-import "./components/InputBar/InputBar.css";
+import React from "react";
 
-export default function App() {
-  const handleSearch = (query) => {
-    console.log("Submitted:", query);
-  };
+import MainPage from "./components/MainPage/MainPage.jsx"
 
-  return (
-    <div style={{ padding: "100px" }}>
-
-      <InputBar placeholder="lets look for a new job.." onSubmit={handleSearch} />
-    </div>
-  );
+function App() {
+  return (<div>
+    <MainPage/>
+  </div>);
 }
+
+export default App;
