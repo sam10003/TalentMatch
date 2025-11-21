@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import InputBar from "./../InputBar/InputBar.jsx";
 import UploadPopup from "./../InputBar/UploadPopup/UploadPopup.jsx";
+import ParticleBackground from "./ParticleBackground.jsx";
 
 // Logo
 import logo from "../../assets/talentmatch-logo.png";
@@ -59,8 +60,10 @@ function MainPage() {
           "linear-gradient(to bottom, rgb(250,245,255), rgb(255,255,255))",
         padding: "1.5rem 1.5rem 2.5rem",
         boxSizing: "border-box",
+        position: "relative",
       }}
     >
+      <ParticleBackground />
       {/* CONTENEDOR PRINCIPAL */}
       <div
         style={{
