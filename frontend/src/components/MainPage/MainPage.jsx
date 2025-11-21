@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import InputBar from "./../InputBar/InputBar.jsx";
 import ParticleBackground from "./ParticleBackground.jsx";
+import CompanyPopup from "./CompanyPopup.jsx";
 import logo from "../../assets/talentmatch-logo.png";
 
 function MainPage() {
@@ -8,6 +9,7 @@ function MainPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [showCompanyPopup, setShowCompanyPopup] = useState(false);
 
   const handleSubmit = async (value) => {
     if (!value?.trim() && !selectedFile) return;
@@ -67,6 +69,22 @@ function MainPage() {
     setSelectedFile(file);
   };
 
+  const handleCompanyClick = () => {
+    setShowCompanyPopup(true);
+  };
+
+  const handleCloseCompanyPopup = () => {
+    setShowCompanyPopup(false);
+  };
+
+  const handleCompanyFileSelected = (file) => {
+    if (file) {
+      console.log("Company file selected:", file);
+      // Handle company file upload here
+      setShowCompanyPopup(false);
+    }
+  };
+
   return (
     <div
       style={{
@@ -83,6 +101,41 @@ function MainPage() {
       }}
     >
       <ParticleBackground />
+      
+      {/* Company button - upper right corner */}
+      <button
+        onClick={handleCompanyClick}
+        style={{
+          position: "fixed",
+          top: "1.5rem",
+          right: "1.5rem",
+          background: "none",
+          border: "none",
+          color: "rgba(147, 51, 234, 0.4)",
+          fontSize: "0.9rem",
+          fontWeight: 400,
+          cursor: "pointer",
+          padding: "0.4rem 0.6rem",
+          borderRadius: "6px",
+          transition: "all 0.2s ease",
+          zIndex: 10,
+          fontFamily: "inherit",
+          textDecoration: "underline",
+          textDecorationColor: "rgba(147, 51, 234, 0.2)",
+          textUnderlineOffset: "3px",
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.color = "rgba(147, 51, 234, 0.7)";
+          e.target.style.textDecorationColor = "rgba(147, 51, 234, 0.4)";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.color = "rgba(147, 51, 234, 0.4)";
+          e.target.style.textDecorationColor = "rgba(147, 51, 234, 0.2)";
+        }}
+      >
+        are you a company?
+      </button>
+      
       {/* CONTENEDOR PRINCIPAL */}
       <div
         style={{
@@ -228,6 +281,14 @@ function MainPage() {
         onSubmit={handleSubmit}
         onFileSelected={handleFileSelected}
       />
+
+      {/* Company Popup */}
+      {showCompanyPopup && (
+        <CompanyPopup
+          onClose={handleCloseCompanyPopup}
+          onFileSelected={handleCompanyFileSelected}
+        />
+      )}
     </div>
   );
 }
