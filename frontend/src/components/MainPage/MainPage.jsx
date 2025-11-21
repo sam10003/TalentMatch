@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import InputBar from "./../InputBar/InputBar.jsx";
 import UploadPopup from "./../InputBar/UploadPopup/UploadPopup.jsx";
+import ParticleBackground from "./ParticleBackground.jsx";
 
 // Logo
 import logo from "../../assets/talentmatch-logo.png";
@@ -48,6 +49,7 @@ function MainPage() {
   const handleCloseUpload = () => setUploadPopup(false);
 
   return (
+<<<<<<< HEAD
     <div
       style={{
         minHeight: "100vh",
@@ -75,6 +77,13 @@ function MainPage() {
       >
         {/* 🔹 ESTADO INICIAL — LOGO MÁS GRANDE Y CENTRADO */}
         {messages.length === 0 && (
+=======
+    <div className="relative flex flex-col gap-4 p-4 h-screen">
+      <ParticleBackground />
+      {/* Chat */}
+      <div className="relative flex-1 overflow-y-auto bg-gray-100 rounded-lg p-4 z-10">
+        {messages.map((m, i) => (
+>>>>>>> d61069250d2835640b8af62bc61f2d8d71afdb84
           <div
             style={{
               flex: 1,
