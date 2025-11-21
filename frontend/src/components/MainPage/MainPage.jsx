@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import InputBar from "./../InputBar/InputBar.jsx";
 import UploadPopup from "./../InputBar/UploadPopup/UploadPopup.jsx";
 import ParticleBackground from "./ParticleBackground.jsx";
+import CompanyPopup from "./CompanyPopup.jsx";
 
 // Logo
 import logo from "../../assets/talentmatch-logo.png";
 
 function MainPage() {
   const [uploadPopup, setUploadPopup] = useState(false);
+  const [companyPopup, setCompanyPopup] = useState(false);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -47,6 +49,14 @@ function MainPage() {
 
   const handleUpload = () => setUploadPopup(true);
   const handleCloseUpload = () => setUploadPopup(false);
+  
+  const handleCompanyClick = () => {
+    setCompanyPopup(true);
+  };
+  
+  const handleCloseCompany = () => {
+    setCompanyPopup(false);
+  };
 
   return (
     <div
@@ -64,6 +74,38 @@ function MainPage() {
       }}
     >
       <ParticleBackground />
+      
+      {/* Company button - upper right corner */}
+      <button
+        onClick={handleCompanyClick}
+        style={{
+          position: "fixed",
+          top: "1.5rem",
+          right: "1.5rem",
+          background: "none",
+          border: "none",
+          color: "rgba(147, 51, 234, 0.5)",
+          fontSize: "0.95rem",
+          fontWeight: 400,
+          cursor: "pointer",
+          padding: "0.5rem 0.75rem",
+          borderRadius: "8px",
+          transition: "all 0.2s ease",
+          zIndex: 10,
+          fontFamily: "inherit",
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.color = "rgba(147, 51, 234, 0.8)";
+          e.target.style.backgroundColor = "rgba(147, 51, 234, 0.05)";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.color = "rgba(147, 51, 234, 0.5)";
+          e.target.style.backgroundColor = "transparent";
+        }}
+      >
+        are you a company?
+      </button>
+      
       {/* CONTENEDOR PRINCIPAL */}
       <div
         style={{
@@ -207,6 +249,7 @@ function MainPage() {
       <InputBar onSubmit={handleSubmit} UploadClick={handleUpload} />
 
       {uploadPopup && <UploadPopup onClose={handleCloseUpload} />}
+      {companyPopup && <CompanyPopup onClose={handleCloseCompany} />}
     </div>
   );
 }
