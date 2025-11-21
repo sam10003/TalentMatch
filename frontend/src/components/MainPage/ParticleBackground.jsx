@@ -103,8 +103,18 @@ function ParticleBackground() {
     <>
       <style ref={styleRef} />
       <div 
-        className="absolute rounded-[16px] overflow-hidden [contain:paint_size_layout]"
-        style={{ zIndex: 0 }}
+        style={{ 
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 0,
+          pointerEvents: 'none',
+          overflow: 'hidden'
+        }}
       >
         {particles.map(particle => (
           <div

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import InputBar from "./../InputBar/InputBar.jsx";
 import UploadPopup from "./../InputBar/UploadPopup/UploadPopup.jsx";
+import ParticleBackground from "./ParticleBackground.jsx";
 
 function MainPage() {
   const [uploadPopup, setUploadPopup] = useState(false);
@@ -56,9 +57,10 @@ function MainPage() {
   const handleCloseUpload = () => setUploadPopup(false);
 
   return (
-    <div className="flex flex-col gap-4 p-4 h-screen">
+    <div className="relative flex flex-col gap-4 p-4 h-screen">
+      <ParticleBackground />
       {/* Chat */}
-      <div className="flex-1 overflow-y-auto bg-gray-100 rounded-lg p-4">
+      <div className="relative flex-1 overflow-y-auto bg-gray-100 rounded-lg p-4 z-10">
         {messages.map((m, i) => (
           <div
             key={i}
