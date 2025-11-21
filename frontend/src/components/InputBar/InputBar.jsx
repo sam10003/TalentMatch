@@ -64,7 +64,7 @@ function InputBar({onSubmit,onUpdate,UploadClick}){
         clearTimeout(timeoutId);
       }
     };
-  }, [currentMessageIndex, isAnimating, messages]);
+  }, [currentMessageIndex, isAnimating]);
   
   const handleChange = (e) => {
     setValue(e.target.value);

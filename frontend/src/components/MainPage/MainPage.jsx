@@ -10,13 +10,11 @@ function MainPage() {
   const [uploadPopup,setUploadPopup] = useState(false);
 
   const handleSubmit = (value) => {
-    // TODO: Implement search submission
     console.log("Submitted:", value);
   };
   
   const handleUpdate = (value) => {
-    // TODO: Implement search updates/debouncing
-    // console.log("is typing:", value);
+    console.log("is typing:", value);
   };
 
   const handleUpload = () => {
