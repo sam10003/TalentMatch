@@ -2,16 +2,18 @@ import React, { useState } from "react";
 import InputBar from "./../InputBar/InputBar.jsx";
 import UploadPopup from "./../InputBar/UploadPopup/UploadPopup.jsx";
 
+// Logo
+import logo from "../../assets/talentmatch-logo.png";
+
 function MainPage() {
   const [uploadPopup, setUploadPopup] = useState(false);
-  const [messages, setMessages] = useState([]);   // chat
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleSubmit = async (value) => {
     if (!value?.trim()) return;
 
-    // 1) Añadimos mensaje del usuario
     const userMessage = { role: "user", content: value };
     setMessages((prev) => [...prev, userMessage]);
 
@@ -19,82 +21,187 @@ function MainPage() {
     setError(null);
 
     try {
-      // 2) Llamamos al webhook de n8n
-      console.log("Enviando a n8n:", value);
-
       const res = await fetch(import.meta.env.VITE_N8N_CHAT_WEBHOOK_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: value }),
       });
 
-      console.log("Status respuesta:", res.status);
-
-      if (!res.ok) {
-        throw new Error(`Error HTTP: ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
 
       const data = await res.json();
-      console.log("Respuesta de n8n:", data);
 
-      // 3) Añadimos mensaje del "agente"
-      const assistantMessage = { role: "assistant", content: data.reply };
+      const assistantMessage = {
+        role: "assistant",
+        content: data.reply,
+      };
+
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
-      console.error("Error llamando al webhook:", err);
       setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpdate = () => {
-    // Opcional, de momento no hace nada
-  };
-
   const handleUpload = () => setUploadPopup(true);
   const handleCloseUpload = () => setUploadPopup(false);
 
   return (
-    <div className="flex flex-col gap-4 p-4 h-screen">
-      {/* Chat */}
-      <div className="flex-1 overflow-y-auto bg-gray-100 rounded-lg p-4">
-        {messages.map((m, i) => (
+    <div
+      style={{
+        minHeight: "100vh",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        background:
+          "linear-gradient(to bottom, rgb(250,245,255), rgb(255,255,255))",
+        padding: "1.5rem 1.5rem 2.5rem",
+        boxSizing: "border-box",
+      }}
+    >
+      {/* CONTENEDOR PRINCIPAL */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "1400px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "1.5rem",
+          margin: "0 auto",
+          paddingBottom: "8rem",
+        }}
+      >
+        {/* 🔹 ESTADO INICIAL — LOGO MÁS GRANDE Y CENTRADO */}
+        {messages.length === 0 && (
           <div
-            key={i}
-            className={`mb-2 ${m.role === "user" ? "text-right" : "text-left"}`}
+            style={{
+              flex: 1,
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              paddingBottom: "6rem", // deja hueco visual para la barra fija
+            }}
           >
             <div
-              className={`inline-block px-3 py-2 rounded-lg max-w-[75%] break-words ${
-                m.role === "user"
-                  ? "bg-purple-500 text-white"
-                  : "bg-white text-gray-900"
-              }`}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+                marginTop: "-4rem", // corrige el empuje hacia arriba y lo centra
+              }}
             >
-              {m.content}
+              <img
+                src={logo}
+                alt="TalentMatch logo"
+                style={{
+                  width: "420px", // grande
+                  maxWidth: "70vw",
+                  marginBottom: "0.5rem",
+                }}
+              />
+
+              <p
+                style={{
+                  fontSize: "2.2rem",
+                  fontWeight: 700,
+                  marginTop: -100,
+                  color: "rgb(88,28,135)",
+                }}
+              >
+                Reinventamos la forma de buscar trabajo
+              </p>
             </div>
           </div>
-        ))}
-
-        {loading && (
-          <p className="text-sm text-gray-500 mt-2">
-            El agente está pensando...
-          </p>
         )}
 
-        {error && (
-          <p className="text-sm text-red-500 mt-2">
-            Error: {error}
-          </p>
+        {/* 🔹 MENSAJES DEL CHAT */}
+        {messages.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.1rem",
+              padding: "0.5rem 3rem",
+              boxSizing: "border-box",
+            }}
+          >
+            {messages.map((m, i) => {
+              const isUser = m.role === "user";
+
+              return (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    justifyContent: isUser ? "flex-end" : "flex-start",
+                  }}
+                >
+                  {/* Avatar del agente */}
+                  {!isUser && (
+                    <div
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        borderRadius: "50%",
+                        backgroundImage: `url(${logo})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        marginRight: "1rem",
+                        boxShadow: "0 4px 10px rgba(0,0,0,0.12)",
+                        flexShrink: 0,
+                      }}
+                    />
+                  )}
+
+                  <div
+                    style={{
+                      maxWidth: "80%",
+                      padding: "1rem 1.4rem",
+                      borderRadius: "1.25rem",
+                      whiteSpace: "pre-line",
+                      wordBreak: "break-word",
+                      fontSize: "1.15rem",
+                      lineHeight: 1.65,
+                      background: isUser
+                        ? "linear-gradient(to right, rgb(147,51,234), rgb(126,34,206))"
+                        : "white",
+                      color: isUser ? "white" : "#111827",
+                      border: isUser
+                        ? "none"
+                        : "1px solid rgba(196,181,253,0.5)",
+                      boxShadow: isUser
+                        ? "0 14px 28px rgba(147,51,234,0.22)"
+                        : "0 10px 24px rgba(15,23,42,0.08)",
+                    }}
+                  >
+                    {m.content}
+                  </div>
+                </div>
+              );
+            })}
+
+            {loading && (
+              <div style={{ fontSize: "1rem", color: "#6b7280" }}>
+                El agente está pensando…
+              </div>
+            )}
+
+            {error && (
+              <div style={{ fontSize: "1rem", color: "#dc2626" }}>
+                Error: {error}
+              </div>
+            )}
+          </div>
         )}
       </div>
 
-      {/* Barra de entrada */}
-      <InputBar
-        onSubmit={handleSubmit}
-        onUpdate={handleUpdate}
-        UploadClick={handleUpload}
-      />
+      {/* Barra inferior fija */}
+      <InputBar onSubmit={handleSubmit} UploadClick={handleUpload} />
 
       {uploadPopup && <UploadPopup onClose={handleCloseUpload} />}
     </div>

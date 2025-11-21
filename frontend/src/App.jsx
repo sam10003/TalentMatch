@@ -4,9 +4,8 @@ import React from "react";
 import MainPage from "./components/MainPage/MainPage.jsx"
 
 function App() {
-  return (<div>
-    <MainPage/>
-  </div>);
+  return <MainPage />;
 }
+
 
 export default App;
