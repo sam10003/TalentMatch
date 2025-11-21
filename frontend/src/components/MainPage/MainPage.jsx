@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import InputBar from "./../InputBar/InputBar.jsx";
-import UploadPopup from "./../InputBar/UploadPopup/UploadPopup.jsx";
 import ParticleBackground from "./ParticleBackground.jsx";
 import logo from "../../assets/talentmatch-logo.png";
 
@@ -9,7 +8,6 @@ function MainPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [showUploadPopup, setShowUploadPopup] = useState(false);
 
   const handleSubmit = async (value) => {
     if (!value?.trim() && !selectedFile) return;
@@ -67,21 +65,6 @@ function MainPage() {
 
   const handleFileSelected = (file) => {
     setSelectedFile(file);
-  };
-
-  const handleUploadClick = () => {
-    setShowUploadPopup(true);
-  };
-
-  const handleCloseUploadPopup = () => {
-    setShowUploadPopup(false);
-  };
-
-  const handleFileSelectedFromPopup = (file) => {
-    if (file) {
-      setSelectedFile(file);
-      setShowUploadPopup(false);
-    }
   };
 
   return (
@@ -244,16 +227,7 @@ function MainPage() {
       <InputBar
         onSubmit={handleSubmit}
         onFileSelected={handleFileSelected}
-        onUploadClick={handleUploadClick}
       />
-
-      {/* Upload Popup - rendered at root level */}
-      {showUploadPopup && (
-        <UploadPopup
-          onClose={handleCloseUploadPopup}
-          onFileSelected={handleFileSelectedFromPopup}
-        />
-      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import {useState, useRef, useEffect} from "react";
 
-function UploadPopup({onClose, onFileSelected}) {
+function UploadPopup({onClose}) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -38,14 +38,8 @@ function UploadPopup({onClose, onFileSelected}) {
     );
 
     if (validFiles.length > 0) {
-      // Take the first valid file and pass it to parent
-      if (onFileSelected) {
-        onFileSelected(validFiles[0]);
-      }
-      // Close popup after file is selected
-      if (onClose) {
-        onClose();
-      }
+      console.log("Files dropped:", validFiles);
+      // Handle file upload here
     } else if (files.length > 0) {
       console.warn("Invalid file type. Please upload .pdf, .doc, or .docx files.");
     }
@@ -64,14 +58,8 @@ function UploadPopup({onClose, onFileSelected}) {
       );
       
       if (validFiles.length > 0) {
-        // Take the first valid file and pass it to parent
-        if (onFileSelected) {
-          onFileSelected(validFiles[0]);
-        }
-        // Close popup after file is selected
-        if (onClose) {
-          onClose();
-        }
+        console.log("Files selected:", validFiles);
+        // Handle file upload here
       }
     }
     // Reset input to allow selecting same file again
@@ -120,7 +108,7 @@ function UploadPopup({onClose, onFileSelected}) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 100,
+        zIndex: 50,
         padding: '1rem'
       }}
     >
@@ -191,13 +179,6 @@ function UploadPopup({onClose, onFileSelected}) {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          onClick={() => {
-            // Open file dialog when clicking the drag area
-            if (fileInputRef.current) {
-              fileInputRef.current.accept = '.pdf,.doc,.docx';
-              fileInputRef.current.click();
-            }
-          }}
           style={{
             flex: 1,
             display: 'flex',
