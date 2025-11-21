@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import InputBar from "./../InputBar/InputBar.jsx";
 import UploadPopup from "./../InputBar/UploadPopup/UploadPopup.jsx";
+<<<<<<< HEAD
+=======
+import ParticleBackground from "./ParticleBackground.jsx";
+>>>>>>> 35f9a25efec6be2fac0c17b984d3510c8dbd63ab
 
 function MainPage() {
   const [uploadPopup, setUploadPopup] = useState(false);
@@ -52,6 +56,7 @@ function MainPage() {
     // Opcional, de momento no hace nada
   };
 
+<<<<<<< HEAD
   const handleUpload = () => setUploadPopup(true);
   const handleCloseUpload = () => setUploadPopup(false);
 
@@ -90,13 +95,26 @@ function MainPage() {
       </div>
 
       {/* Barra de entrada */}
+=======
+  const handleClosePopup = () => {
+    setUploadPopup(false);
+  };
+
+  return (
+    <div className="relative" style={{ overflowX: 'hidden', width: '100%' }}>
+      <ParticleBackground />
+>>>>>>> 35f9a25efec6be2fac0c17b984d3510c8dbd63ab
       <InputBar
         onSubmit={handleSubmit}
         onUpdate={handleUpdate}
         UploadClick={handleUpload}
       />
+<<<<<<< HEAD
 
       {uploadPopup && <UploadPopup onClose={handleCloseUpload} />}
+=======
+      {uploadPopup && <UploadPopup onClose={handleClosePopup}/>}
+>>>>>>> 35f9a25efec6be2fac0c17b984d3510c8dbd63ab
     </div>
   );
 }
