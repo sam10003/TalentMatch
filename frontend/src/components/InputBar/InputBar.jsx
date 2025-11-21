@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Upload from "./Upload.jsx";
 
-function InputBar({ onSubmit, onUpdate, onFileSelected }) {
+function InputBar({ onSubmit, onUpdate, onFileSelected, onUploadClick }) {
   const [value, setValue] = useState("");
   const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
   const [isAnimating, setIsAnimating] = useState(true);
@@ -64,11 +64,12 @@ function InputBar({ onSubmit, onUpdate, onFileSelected }) {
   };
 
   const handleUploadClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
+    if (onUploadClick) {
+      onUploadClick();
     }
   };
 
+  // Keep the hidden input for backward compatibility if needed
   const handleFileChange = (e) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
@@ -140,7 +141,7 @@ function InputBar({ onSubmit, onUpdate, onFileSelected }) {
           onChange={handleFileChange}
         />
 
-        {/* Botón Upload que abre el explorador */}
+        {/* Botón Upload que abre el popup */}
         <Upload clicked={handleUploadClick} />
 
         <button

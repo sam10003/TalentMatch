@@ -1,7 +1,7 @@
 import React from "react";
 import {useState, useRef, useEffect} from "react";
 
-function UploadPopup({onClose}) {
+function UploadPopup({onClose, onFileSelected}) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -38,8 +38,14 @@ function UploadPopup({onClose}) {
     );
 
     if (validFiles.length > 0) {
-      console.log("Files dropped:", validFiles);
-      // Handle file upload here
+      // Take the first valid file and pass it to parent
+      if (onFileSelected) {
+        onFileSelected(validFiles[0]);
+      }
+      // Close popup after file is selected
+      if (onClose) {
+        onClose();
+      }
     } else if (files.length > 0) {
       console.warn("Invalid file type. Please upload .pdf, .doc, or .docx files.");
     }
@@ -58,8 +64,14 @@ function UploadPopup({onClose}) {
       );
       
       if (validFiles.length > 0) {
-        console.log("Files selected:", validFiles);
-        // Handle file upload here
+        // Take the first valid file and pass it to parent
+        if (onFileSelected) {
+          onFileSelected(validFiles[0]);
+        }
+        // Close popup after file is selected
+        if (onClose) {
+          onClose();
+        }
       }
     }
     // Reset input to allow selecting same file again
@@ -108,7 +120,7 @@ function UploadPopup({onClose}) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 50,
+        zIndex: 100,
         padding: '1rem'
       }}
     >
@@ -179,6 +191,13 @@ function UploadPopup({onClose}) {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
+          onClick={() => {
+            // Open file dialog when clicking the drag area
+            if (fileInputRef.current) {
+              fileInputRef.current.accept = '.pdf,.doc,.docx';
+              fileInputRef.current.click();
+            }
+          }}
           style={{
             flex: 1,
             display: 'flex',
