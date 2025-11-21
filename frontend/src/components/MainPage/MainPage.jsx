@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import InputBar from "./../InputBar/InputBar.jsx";
+import ParticleBackground from "./ParticleBackground.jsx";
 import logo from "../../assets/talentmatch-logo.png";
 
 function MainPage() {
@@ -78,8 +79,10 @@ function MainPage() {
           "linear-gradient(to bottom, rgb(250,245,255), rgb(255,255,255))",
         padding: "1.5rem 1.5rem 2.5rem",
         boxSizing: "border-box",
+        position: "relative",
       }}
     >
+      <ParticleBackground />
       {/* CONTENEDOR PRINCIPAL */}
       <div
         style={{
@@ -90,6 +93,8 @@ function MainPage() {
           gap: "1.5rem",
           margin: "0 auto",
           paddingBottom: "8rem",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         {/* 🔹 ESTADO INICIAL — LOGO + FRASE */}
