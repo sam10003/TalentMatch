@@ -28,7 +28,7 @@ function MainPage() {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" style={{ overflowX: 'hidden', width: '100%' }}>
       <ParticleBackground />
       <InputBar
         onSubmit={handleSubmit}

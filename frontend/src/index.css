@@ -15,9 +15,16 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
   background: linear-gradient(to bottom, #faf5ff, #ffffff);
+  overflow-x: hidden;
+  overflow-y: auto;
 }
