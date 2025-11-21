@@ -1,31 +1,46 @@
 import React, { useState } from "react";
 import InputBar from "./../InputBar/InputBar.jsx";
-import UploadPopup from "./../InputBar/UploadPopup/UploadPopup.jsx";
-import ParticleBackground from "./ParticleBackground.jsx";
-
-// Logo
 import logo from "../../assets/talentmatch-logo.png";
 
 function MainPage() {
-  const [uploadPopup, setUploadPopup] = useState(false);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const handleSubmit = async (value) => {
-    if (!value?.trim()) return;
+    if (!value?.trim() && !selectedFile) return;
 
-    const userMessage = { role: "user", content: value };
+    const userMessage = {
+      role: "user",
+      content: value || (selectedFile ? `He subido el archivo: ${selectedFile.name}` : ""),
+    };
     setMessages((prev) => [...prev, userMessage]);
 
     setLoading(true);
     setError(null);
 
     try {
-      const res = await fetch(import.meta.env.VITE_N8N_CHAT_WEBHOOK_URL, {
+      const url = import.meta.env.VITE_N8N_CHAT_WEBHOOK_URL;
+
+      let body;
+      let headers = {};
+
+      if (selectedFile) {
+        // 👇 Enviamos texto + archivo en FormData
+        body = new FormData();
+        body.append("message", value);
+        body.append("file", selectedFile); // en n8n te llegará como binary "file"
+        // NO ponemos Content-Type: el navegador lo hace solo
+      } else {
+        headers["Content-Type"] = "application/json";
+        body = JSON.stringify({ message: value });
+      }
+
+      const res = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: value }),
+        headers,
+        body,
       });
 
       if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
@@ -39,17 +54,16 @@ function MainPage() {
 
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
+      console.error(err);
       setError(err.message);
     } finally {
       setLoading(false);
+      setSelectedFile(null); // limpiamos después de enviar
     }
   };
 
-  const handleUpload = () => setUploadPopup(true);
-  const handleCloseUpload = () => setUploadPopup(false);
-  
-  const handleCompanyClick = () => {
-    console.log("Company button clicked");
+  const handleFileSelected = (file) => {
+    setSelectedFile(file);
   };
 
   return (
@@ -64,42 +78,8 @@ function MainPage() {
           "linear-gradient(to bottom, rgb(250,245,255), rgb(255,255,255))",
         padding: "1.5rem 1.5rem 2.5rem",
         boxSizing: "border-box",
-        position: "relative",
       }}
     >
-      <ParticleBackground />
-      
-      {/* Company button - upper right corner */}
-      <button
-        onClick={handleCompanyClick}
-        style={{
-          position: "fixed",
-          top: "1.5rem",
-          right: "1.5rem",
-          background: "none",
-          border: "none",
-          color: "rgba(147, 51, 234, 0.5)",
-          fontSize: "0.95rem",
-          fontWeight: 400,
-          cursor: "pointer",
-          padding: "0.5rem 0.75rem",
-          borderRadius: "8px",
-          transition: "all 0.2s ease",
-          zIndex: 10,
-          fontFamily: "inherit",
-        }}
-        onMouseEnter={(e) => {
-          e.target.style.color = "rgba(147, 51, 234, 0.8)";
-          e.target.style.backgroundColor = "rgba(147, 51, 234, 0.05)";
-        }}
-        onMouseLeave={(e) => {
-          e.target.style.color = "rgba(147, 51, 234, 0.5)";
-          e.target.style.backgroundColor = "transparent";
-        }}
-      >
-        are you a company?
-      </button>
-      
       {/* CONTENEDOR PRINCIPAL */}
       <div
         style={{
@@ -112,7 +92,7 @@ function MainPage() {
           paddingBottom: "8rem",
         }}
       >
-        {/* 🔹 ESTADO INICIAL — LOGO MÁS GRANDE Y CENTRADO */}
+        {/* 🔹 ESTADO INICIAL — LOGO + FRASE */}
         {messages.length === 0 && (
           <div
             style={{
@@ -121,7 +101,7 @@ function MainPage() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              paddingBottom: "6rem", // deja hueco visual para la barra fija
+              paddingBottom: "6rem", // hueco para la barra fija
             }}
           >
             <div
@@ -131,24 +111,23 @@ function MainPage() {
                 alignItems: "center",
                 justifyContent: "center",
                 textAlign: "center",
-                marginTop: "-4rem", // corrige el empuje hacia arriba y lo centra
+                marginTop: "-4rem",
               }}
             >
               <img
                 src={logo}
                 alt="TalentMatch logo"
                 style={{
-                  width: "420px", // grande
+                  width: "360px",
                   maxWidth: "70vw",
                   marginBottom: "0.5rem",
                 }}
               />
-
               <p
                 style={{
                   fontSize: "2.2rem",
                   fontWeight: 700,
-                  marginTop: -100,
+                  marginTop: -50,
                   color: "rgb(88,28,135)",
                 }}
               >
@@ -240,9 +219,10 @@ function MainPage() {
       </div>
 
       {/* Barra inferior fija */}
-      <InputBar onSubmit={handleSubmit} UploadClick={handleUpload} />
-
-      {uploadPopup && <UploadPopup onClose={handleCloseUpload} />}
+      <InputBar
+        onSubmit={handleSubmit}
+        onFileSelected={handleFileSelected}
+      />
     </div>
   );
 }
