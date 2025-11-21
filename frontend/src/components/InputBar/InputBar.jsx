@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import Upload from "./Upload.jsx";
 
-function InputBar({ onSubmit, onUpdate, UploadClick }) {
+function InputBar({ onSubmit, onUpdate, onFileSelected }) {
   const [value, setValue] = useState("");
   const [animatedPlaceholder, setAnimatedPlaceholder] = useState("");
   const [isAnimating, setIsAnimating] = useState(true);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const animationRef = useRef(null);
   const charIndexRef = useRef(0);
+  const fileInputRef = useRef(null);
+  const [fileName, setFileName] = useState("");
 
   const messages = [
     "ready to find a new an amazing new career!",
@@ -56,9 +58,22 @@ function InputBar({ onSubmit, onUpdate, UploadClick }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (onSubmit && value.trim() !== "") {
-      onSubmit(value);
-      setValue("");
+    if (!value.trim() && !fileName) return;
+    if (onSubmit) onSubmit(value);
+    setValue("");
+  };
+
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      setFileName(file.name);
+      if (onFileSelected) onFileSelected(file);
     }
   };
 
@@ -98,12 +113,14 @@ function InputBar({ onSubmit, onUpdate, UploadClick }) {
             if (onUpdate) onUpdate(e.target.value);
           }}
           placeholder={
-            isAnimating ? animatedPlaceholder : "Brand new job opportunities..."
+            isAnimating
+              ? animatedPlaceholder
+              : "Brand new job opportunities..."
           }
           style={{
             flex: 1,
             padding: "1.1rem 1.4rem",
-            fontSize: "1.05rem",  // 👈 más grande
+            fontSize: "1.05rem",
             borderRadius: "9999px",
             border: "2px solid rgb(233,213,255)",
             backgroundColor: "white",
@@ -114,13 +131,23 @@ function InputBar({ onSubmit, onUpdate, UploadClick }) {
           }}
         />
 
-        <Upload clicked={UploadClick} />
+        {/* input de archivo oculto */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          accept=".pdf,.doc,.docx,.txt"
+          onChange={handleFileChange}
+        />
+
+        {/* Botón Upload que abre el explorador */}
+        <Upload clicked={handleUploadClick} />
 
         <button
           type="submit"
           style={{
             padding: "1.05rem 1.9rem",
-            fontSize: "1.05rem",  // 👈 más grande
+            fontSize: "1.05rem",
             fontWeight: 600,
             borderRadius: "9999px",
             background:
